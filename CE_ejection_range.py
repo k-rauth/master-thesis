@@ -95,12 +95,8 @@ else:
     e_final = np.sqrt(1 + (2 * Eorb * (Lorb ** 2)) / (mu * (G ** 2) * (M1rem ** 2) * (M2 ** 2)))
 
     # re-circularize orbit immediately (not realistic, but result should not be significantly different)
-    if w < 0.1:  # no kick: no change in orbital separation
-        recircul = a0
-        recircul_rsol = a0/rsol
-    else:
-        recircul = (1 - e_final**2)*a
-        recircul_rsol = (1 - e_final**2)*a_rsol
+     recircul = (1 - e_final**2)*a
+     recircul_rsol = (1 - e_final**2)*a_rsol
 
 
     # calculate Schwarzschild radius
@@ -198,9 +194,7 @@ else:
 
     # calculate final separation in cm
         a_f = G * m2_core * M1rem / (2 * ((G * m2 * M1rem / (2 * a_i)) - (bind_b / alpha)))
-
-    #q = m2_core/M1rem  # want Roche lobe radius of m2_core
-    # TEST
+        
         q = M1rem / m2_core  # see 2.37 in Daniels thesis
 
     # calculate Roche lobe radius in cm from Eggleton 1983
@@ -219,8 +213,6 @@ else:
             print('System survives common envelope.')
 
             P_orb = 2 * np.pi * np.sqrt((a_f ** 3) / (G * (M1rem + m2_core)))  # in seconds
-
-            # TO DO: write final separation, Roche lobe and event horizon radius into an output file for the system
 
      # new calculation to get efficiency parameter from minimum final separation possible (R2_core = R_L)
         r2core = rsol * hist2.he_core_radius[model]
