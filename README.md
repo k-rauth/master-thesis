@@ -1,6 +1,8 @@
 # master-thesis
 Code from my master thesis to calculate common envelope consequences from MESA models
 
+MESA folder: inlist and column files to recreate MESA models with version 10398.
+
 SN_to_CE.py: 
 
 Takes MESA binary models where each component ended with helium depletion (orbital period set to infinity after first SN).
