@@ -109,10 +109,6 @@ else:
     e_final = np.sqrt(1 + (2 * Eorb * (Lorb ** 2)) / (mu * (G ** 2) * (M1rem ** 2) * (M2 ** 2)))
 
     # re-circularize orbit immediately (not realistic, but result should not be significantly different)
-    if w < 0.1:  # no kick: no change in orbital separation
-        recircul = a0
-        recircul_rsol = a0/rsol
-    else:
         recircul = (1 - e_final**2)*a
         recircul_rsol = (1 - e_final**2)*a_rsol
 
@@ -215,14 +211,11 @@ else:
     # calculate final separation in cm
     a_f = G * m2_core * M1rem / (2 * ((G * m2 * M1rem / (2 * a_i)) - (bind_b / alpha)))
 
-    #q = m2_core/M1rem  # want Roche lobe radius of m2_core
-    # TEST
     q = M1rem / m2_core  # see 2.37 in Daniels thesis
 
     # calculate Roche lobe radius in cm from Eggleton 1983
     R_L = (0.49 * (q ** (2 / 3)) * a_f) / (0.6 * (q ** (2 / 3)) + np.log(1 + q ** (1 / 3)))  # np.log = ln
 
-    # what could be a good value that approximates the core radius? maybe event horizon of black hole companion?
     if a_f <= r_schw:
         print('The envelope cant be ejected before the two objects merge.')
 
@@ -238,7 +231,6 @@ else:
         print('Final separation in Rsun:', a_f / rsol)
         P_orb = 2 * np.pi * np.sqrt((a_f ** 3) / (G * (M1rem + m2_core)))  # in seconds
         print('Final orbital period in days: ', P_orb / 86400)
-        # TO DO: write final separation, Roche lobe and event horizon radius into an output file for the system
 
     # new calculation to get efficiency parameter from minimum final separation possible (R2_core = R_L)
     r2core = rsol * hist2.he_core_radius[model]
@@ -258,8 +250,6 @@ else:
     print('remaining core mass of secondary in g: ', m2_core)
     print('envelope mass ejected during CE in Msun: ', (m2 - m2_core) / msol)
 
-
-    # TO DO: any other parameters I need to start a new MESA run
     # C core already building in He star
     c_core_mass = hist2.c_core_mass[model]
     print('C core mass building in He star at point of CE: ', c_core_mass)
@@ -269,5 +259,3 @@ else:
     print('Final orbital period in days for minimal separation: ', P_orb / 86400)
 
     print('system age where CE is happening in Myr: ', hist2.star_age[model] / 1e6)
-
-    # TO DO: print neat file with the important values for the next MESA run
