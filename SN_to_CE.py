@@ -211,7 +211,7 @@ else:
     # calculate final separation in cm
     a_f = G * m2_core * M1rem / (2 * ((G * m2 * M1rem / (2 * a_i)) - (bind_b / alpha)))
 
-    q = M1rem / m2_core  # see 2.37 in Daniels thesis
+    q =  m2_core / M1rem
 
     # calculate Roche lobe radius in cm from Eggleton 1983
     R_L = (0.49 * (q ** (2 / 3)) * a_f) / (0.6 * (q ** (2 / 3)) + np.log(1 + q ** (1 / 3)))  # np.log = ln
