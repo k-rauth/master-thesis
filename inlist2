@@ -1,0 +1,272 @@
+
+! inlist_test_rlo
+
+
+
+&star_job
+
+    show_log_description_at_start = .false.
+
+    new_rotation_flag = .true.
+    change_rotation_flag = .true.
+    set_initial_surface_rotation_v = .true.
+    ! this is just a random number, tidal sync takes care of it
+    new_surface_rotation_v = 50
+
+    file_for_uniform_xa = "xa_SMC.data"
+    set_uniform_initial_xa_from_file = .true.
+
+    save_model_when_terminate = .true.
+    save_model_filename = "model2.dat"
+
+    h_he_net = 'basic2.net'
+    co_net = 'co_burn2.net'
+
+    kappa_file_prefix = "BROTT_SMC"
+    kappa_CO_prefix = "BROTT_SMC_co"
+
+    pgstar_flag = .false.
+    ! pause before terminate run to allow study of pgstar windows
+    pause_before_terminate = .false.
+
+/ ! end of star_job namelist
+
+
+
+&controls
+
+    he_core_boundary_h1_fraction = 0.1 ! same core boundary definition as ComBinE (KR)
+   
+    timestep_factor_for_retries = 0.8
+    timestep_factor_for_backups = 0.8
+    min_timestep_factor = 0.9
+    max_timestep_factor = 1.05d0
+    backup_hold = 10
+    retry_hold = 5
+    redo_limit = -1
+    relax_hard_limits_after_retry = .false.
+    ! min timestep limit 1d-4 years
+    min_timestep_limit = 3.154
+
+    newton_iterations_limit = 7
+
+    ! Fixing the position of the Lagrangian region of the mesh helps
+    ! convergence near the Eddington limit
+    max_logT_for_k_below_const_q = 100
+    max_q_for_k_below_const_q = 0.995
+    min_q_for_k_below_const_q = 0.995
+    max_logT_for_k_const_mass = 100
+    max_q_for_k_const_mass = 0.99
+    min_q_for_k_const_mass = 0.99
+
+    !!extra spatial resolution
+    mesh_delta_coeff = 0.8
+    max_dq = 0.001
+    xtra_coef_above_xtrans = 0.2
+    xtra_coef_below_xtrans = 0.2
+    min_dq_for_xa = 1d-5
+    max_allowed_nz = 15000
+
+    fix_eps_grav_transition_to_grid = .true.
+
+    smooth_outer_xa_big = 0.05
+    smooth_outer_xa_small = 0.03
+
+    initial_z = 2.179d-3
+    zams_filename = 'BROTT_SMC.data'
+
+    max_model_number = 10000
+    max_number_retries = 500
+
+    ! extra controls for timestep
+    ! these are for changes in mdot at the onset of mass transfer
+    delta_lg_star_mass_limit = 2d-3
+    delta_lg_star_mass_hard_limit = 2d-3
+    ! these are to properly resolve core hydrogen depletion
+    delta_lg_XH_cntr_limit = 0.02d0
+    delta_lg_XH_cntr_max = 0.0d0
+    delta_lg_XH_cntr_min = -6.0d0
+    delta_lg_XH_cntr_hard_limit = 0.03d0
+    ! these are to properly resolve core helium depletion
+    delta_lg_XHe_cntr_limit = 0.02d0
+    delta_lg_XHe_cntr_max = 0.0d0
+    delta_lg_XHe_cntr_min = -6.0d0
+    delta_lg_XHe_cntr_hard_limit = 0.03d0
+    ! these are to properly resolve core carbon depletion
+    delta_lg_XC_cntr_limit = 0.01d0
+    delta_lg_XC_cntr_max = 0.0d0
+    delta_lg_XC_cntr_min = -5.0d0
+    delta_lg_XC_cntr_hard_limit = 0.02d0
+    ! this is mainly to resolve properly when the star goes off the main sequence
+    delta_HR_limit = 0.005d0
+    ! relax default dHe/He, otherwise growing He core can cause things to go at a snail pace
+    dHe_div_He_limit = 2.0
+    ! we're not looking for much precision at the very late stages
+    dX_nuc_drop_limit = 5d-2
+
+    photo_directory = 'photos2'
+    log_directory = 'LOGS2'
+
+    profile_interval = 200
+    history_interval = 1
+    terminal_interval = 50
+    write_header_frequency = 10
+    max_num_profile_models = 10000
+
+    use_ledoux_criterion = .true.
+    mixing_length_alpha = 1.5
+    alpha_semiconvection = 1d0
+    thermohaline_coeff = 1d0
+    remove_small_D_limit = 1d-50
+    mixing_D_limit_for_log = 1d-50
+
+  ! rotational mixing coeffs
+    am_nu_ST_factor = 1.0
+    D_visc_factor = 0.0
+    am_nu_SH_factor = 0.0
+    D_ST_factor = 0.0
+    D_SH_factor = 0.0
+    D_GSF_factor = 1.0
+    D_ES_factor = 1.0
+    D_SSI_factor = 1.0
+    D_DSI_factor = 1.0
+    am_D_mix_factor = 0.0333d0
+    am_gradmu_factor = 0.1d0
+    num_cells_for_smooth_gradL_composition_term = 3
+
+  ! premix omega to avoid doing the newton with crazily shearing material
+    premix_omega = .true.
+
+  ! wind options
+    use_other_wind = .true.
+
+  ! controls for implicit wind
+    surf_avg_tau_min = 0
+    surf_avg_tau = 10
+    max_mdot_redo_cnt = 200
+    min_years_dt_for_redo_mdot = 0
+    surf_w_div_w_crit_limit = 0.99d0
+    surf_w_div_w_crit_tol = 0.06d0
+    rotational_mdot_boost_fac = 1d10
+    rotational_mdot_kh_fac = 1d10
+    mdot_revise_factor = 1.2
+    implicit_mdot_boost = 0.1
+
+  ! custom opacity that scales with iron abundance
+    use_Type2_opacities = .true.
+    Zbase = 2.179d-3
+
+  ! we use step overshooting
+    step_overshoot_f_above_burn_h_core = 0.345
+    overshoot_f0_above_burn_h_core = 0.01
+    step_overshoot_D0_coeff = 1.0
+    remove_mixing_glitches = .false.
+
+    max_brunt_B_for_overshoot = 1d-1
+
+  ! this is to avoid odd behaviour when a star switches from accreting to mass losing
+    max_mdot_jump_for_rotation = 1d99 
+
+/ ! end of controls namelist
+
+
+&pgstar
+        !### Kippenhahn window -Task 3
+         Kipp_win_flag = .true.   ! Add a Kippenhahn plot window
+         Kipp_file_flag = .true.  ! save png’s of the Kippenhahn plots
+         Kipp_file_interval = 20  ! output less frequently than default every 5 models
+
+         Grid2_win_flag = .true.
+         Grid2_file_flag = .true.  !save Grid2 files for movies
+         Grid2_file_dir = 'png'
+         Grid2_file_prefix = 'Grid2'
+         Grid2_file_interval = 20 ! output when mod(model_number,Grid2_file_interval)==0
+         Grid2_file_width = 9 ! negative means use same value as for window
+         Grid2_file_aspect_ratio = -1 ! negative means use same value as for wind
+         Grid2_plot_name(3) = 'Abundance'
+         Abundance_num_isos_to_show = 2
+         Abundance_which_isos_to_show(1) = 'h1'
+         Abundance_which_isos_to_show(2) = 'he4'
+         Abundance_log_mass_frac_min = -1 ! only used if < 0
+         Abundance_xmin = 0.0d0 ! only used if /= -101d0
+         Abundance_xmax = 0.5d0 ! only used if /= -101d0
+
+         !### Text_Summary1 changes to Grid2 output  -Task 4
+         Text_Summary1_name(7,1) = 'star_1_mass'  ! replacing 'log_g'
+         Text_Summary1_name(8,1) = 'log_abs_mdot' ! replacing 'log_surf_P'
+         Text_Summary1_name(1,2) = 'he_core_mass' ! replacing 'star_mass'
+         Text_Summary1_name(2,2) = 'c_core_mass'  ! replacing 'log_abs_mdot'
+         Text_Summary1_name(3,2) = 'envelope_mass' ! replacing 'he_core_mass'
+         Text_Summary1_name(4,2) = 'radius'       ! replacing 'c_core_mass'
+         Text_Summary1_name(5,2) = 'rl_1'         ! replacing 'cz_bot_mass'
+         Text_Summary1_name(6,2) = 'star_2_mass'  ! replacing 'cz_top_mass'
+         Text_Summary1_name(7,2) = 'period_days'  ! replacing 'cz_bot_radius'
+         Text_Summary1_name(8,2) = 'binary_separation' ! replacing 'cz_top_radius'
+         Text_Summary1_name(7,3) = 'J_orb'  ! replacing 'center n14'
+         Text_Summary1_name(8,3) = 'Jdot'   ! replacing 'center o16'
+         Text_Summary1_name(1,4) = 'jdot_mb'  ! replacing 'log_Lnuc'
+         Text_Summary1_name(2,4) = 'jdot_gr'  ! replacing 'log_Lneu'
+         Text_Summary1_name(3,4) = 'jdot_ml'  ! replacing 'log_LH'
+         Text_Summary1_name(4,4) = 'jdot_ls'  ! replacing 'log_LHe'
+         Text_Summary1_name(5,4) = 'log_Lnuc' ! replacing 'log_LZ'
+
+
+         !### History_Track2 changes
+         History_Track2_win_flag = .true.
+         History_Track2_win_width = 7
+         History_Track2_win_aspect_ratio = 0.75 ! aspect_ratio = height/width
+         
+         History_Track2_xleft = 0.15
+         History_Track2_xright = 0.85
+         History_Track2_ybot = 0.15
+         History_Track2_ytop = 0.85
+         History_Track2_txt_scale = 1.0
+         History_Track2_title = 'Mass Transfer Rate'      
+         
+         History_Track2_xname = 'model_number'
+         History_Track2_yname = 'log_abs_mdot'
+         History_Track2_xaxis_label = 'model_number'
+         History_Track2_yaxis_label = 'log_abs_mdot'
+         History_Track2_reverse_xaxis = .false.
+         History_Track2_reverse_yaxis = .false.
+         History_Track2_log_xaxis = .false. ! show log10 of abs value
+         History_Track2_log_yaxis = .false. ! show log10 of abs value
+      
+         History_Track2_xmin = -101d0 ! only used if /= -101d0
+         History_Track2_xmax = -101d0 ! only used if /= -101d0
+         History_Track2_ymin = -13d0 ! truncates for Mdot<1D-13 Msun/y
+         History_Track2_ymax = -101d0 ! only used if /= -101d0
+
+         History_Track2_xmargin = 0.1
+         History_Track2_ymargin = 0.1
+         History_Track2_dxmin = -1 
+         History_Track2_dymin = -1 
+      
+         History_Track2_step_min = -1 ! only plot models with model number >= this
+         History_Track2_step_max = 999999 ! only plot models with model number <= this
+         
+         show_History_Track2_target_box = .false.
+         History_Track2_n_sigma = -3 ! -n means show sig 1..n
+         History_Track2_xtarget = 0
+         History_Track2_xsigma = 0
+         History_Track2_ytarget = 0
+         History_Track2_ysigma = 0  
+
+         show_History_Track2_annotation1 = .false.
+         show_History_Track2_annotation2 = .false.
+         show_History_Track2_annotation3 = .false.
+         
+         History_Track2_fname = '' ! file name for extra track data
+         
+         ! file output
+         History_Track2_file_flag = .true.
+         History_Track2_file_dir = 'png'
+         History_Track2_file_prefix = 'track2_'
+         History_Track2_file_interval = 20 ! output when mod(model_number,History_Track2_file_interval)==0
+         History_Track2_file_width = -1 ! (inches) negative means use same value as for window
+         History_Track2_file_aspect_ratio = -1 ! negative means use same value as for window
+
+         !pause = .true.
+
+        
+/ ! end of pgstar namelist

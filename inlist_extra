@@ -1,0 +1,5 @@
+&binary_controls
+m1 = 60.0
+m2 = 40.0
+initial_period_in_days = 1000.0 ! equals 1955 Rsun initial separation 
+/ ! end of binary_controls namelist
