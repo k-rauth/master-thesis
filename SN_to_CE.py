@@ -109,8 +109,8 @@ else:
     e_final = np.sqrt(1 + (2 * Eorb * (Lorb ** 2)) / (mu * (G ** 2) * (M1rem ** 2) * (M2 ** 2)))
 
     # re-circularize orbit immediately (not realistic, but result should not be significantly different)
-        recircul = (1 - e_final**2)*a
-        recircul_rsol = (1 - e_final**2)*a_rsol
+    recircul = (1 - e_final**2)*a
+    recircul_rsol = (1 - e_final**2)*a_rsol
 
 
 
